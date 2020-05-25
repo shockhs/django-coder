@@ -1,0 +1,131 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Text Coder</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #1e2a78;
+            color: #f9ff21;
+        }
+
+        main {
+            width: 1240px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            width: 400px;
+            flex-direction: column;
+        }
+
+        input,
+        textarea {
+            margin-bottom: 20px;
+        }
+
+        input[type="submit"] {
+            border: none;
+            outline: none;
+            background-color: #ffd615;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #1e2a78;
+            padding: 5px 0 5px 0;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #f9ff21;
+        }
+
+        .results {
+            margin-top: 10px;
+        }
+
+        .text {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        header {
+            width: 400px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        h2 {
+            color: #ff1f5a;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        header a {
+            text-decoration: none;
+            color: #ff1f5a;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        header a:hover {
+            color: #f9ff21
+        }
+        .codingMode {
+            display: grid;
+            grid-template-columns: 83% 17%;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h2>Text coder</h2>
+        <header>
+            <span>Welcome, {{request.user}}</span>
+            <a href="{% url 'cleaner' %}">Clear table</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </header>
+        <form action="/textcode/" method="POST">
+            {% csrf_token %}
+            <input name="username" id="username" type="text" value="{{request.user}}" style="display: none;">
+            <label for="codingText">Введите текст</label>
+            <textarea type="text" name="codingText" id="codingText" rows="5" cols="5"></textarea>
+            <label for="rails">Введите количество уровней</label>
+            <input type="number" name="rails" id="rails" >
+            <div class="codingMode">
+                <label for="codingMode">Режим обработки ( 1 - зашифровать текст, 2 - расшифровать текст, по умолчанию: шифрование):</label>
+                <input type="number" name="codingMode" id="codingMode">
+            </div>
+            <input type="submit" value="Code this">
+        </form>
+        <div class="results">
+            {% for item in elements %}
+            {% if item.username == request.user.username %}
+            <div class="text">
+                <span>Введенное сообщение: {{item.textEntered}}</span>
+                <span>Закодированное сообщение: {{item.textEncoded}}</span>
+                <span>Количество уровней: {{item.rails}}</span>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </main>
+</body>
+
+</html>
